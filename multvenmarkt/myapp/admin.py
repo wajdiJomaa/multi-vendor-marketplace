@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from django.contrib import admin
 from .models import (
-    UserDjango,
     Customer,
     Product,
     Category,
@@ -20,7 +19,6 @@ from .models import (
 )
 
 
-admin.site.register(UserDjango)
 admin.site.register(Customer)
 admin.site.register(Product)
 admin.site.register(Category)
