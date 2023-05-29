@@ -7,3 +7,5 @@ def index(request):
 
 def wajdi(request):
     return render(request, "index.html")
+def home():
+    print("hello")
