@@ -2,94 +2,101 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20)
-    adresse = models.CharField(max_length=255)
+    address = models.CharField(max_length=200)
+    profile_photo = models.ImageField(upload_to='customer_profile_photos')
 
-class Product(models.Model):
-    Vendor = models.ForeignKey('Vendor', on_delete=models.CASCADE)
-    ProductName = models.CharField(max_length=255)
-    brand = models.CharField(max_length=255)
-    MadeIn = models.CharField(max_length=255)
-    model = models.CharField(max_length=255)
-    additionalInfos = models.CharField(max_length=255)
-    Description = models.TextField()
-    Price = models.DecimalField(max_digits=10, decimal_places=2)
-    capacity = models.CharField(max_length=255)
-    Availability = models.BooleanField()
-
-class Category(models.Model):
-    CategoryName = models.CharField(max_length=255)
-
-class Product_Category(models.Model):
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    Category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 class Vendor(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    Description = models.TextField()
-    ContactPerson = models.CharField(max_length=255)
-    Address = models.CharField(max_length=255)
-    PhoneNumber = models.CharField(max_length=20)
-
-class Maintenance_Service(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    ServiceName = models.CharField(max_length=255)
-    Description = models.TextField()
-    Price = models.DecimalField(max_digits=10, decimal_places=2)
-
-class Order(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    OrderDate = models.DateField()
-    Status = models.CharField(max_length=255)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.TextField()
+    address = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20)
+    website = models.URLField()
+    profile_photo = models.ImageField(upload_to='vendor_profile_photos')
 
-class Order_Item(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+class VendorSocialMedia(models.Model):
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    media_name = models.CharField(max_length=50)
+    link = models.URLField()
+
+
+class Subscription(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+
+
+class Product(models.Model):
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    brand = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+    made_in = models.CharField(max_length=100)
+    description = models.TextField()
+    image = models.ImageField(upload_to='product_images')
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    category_image = models.ImageField(upload_to='category_images')
+
+
+class ProductCategory(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    RoundedPrice = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
-class Vendor_Billing(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    Order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    Amount = models.DecimalField(max_digits=10, decimal_places=2)
-    BillingDate = models.DateField()
 
-class Service_Reviews(models.Model):
-    Service = models.ForeignKey(Maintenance_Service, on_delete=models.CASCADE)
-    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    Rating = models.IntegerField()
-    Review_Text = models.TextField()
-    Review_Date = models.DateField()
+class Option(models.Model):
+    name = models.CharField(max_length=100)
 
-class Reviews_Product(models.Model):
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    Rating = models.IntegerField()
-    Review_Text = models.TextField()
-    Review_Date = models.DateField()
 
-class Reviews_vendors(models.Model):
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    Rating = models.IntegerField()
-    Review_Text = models.TextField()
-    Review_Date = models.DateField()
+class ProductOption(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    option_value = models.CharField(max_length=100)
+    option_image = models.ImageField(upload_to='option_images')
+
 
 class Offer(models.Model):
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    discount = models.DecimalField(max_digits=5, decimal_places=2)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    discount_value = models.DecimalField(max_digits=5, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
 
-class Subscription(models.Model):
-    Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    Vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    subscription_date = models.DateField()
 
-# Create your models here.
+class Wishlist(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    products = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class Cart(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class Order(models.Model):
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    order_date = models.DateField()
+    status = models.CharField(max_length=100)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    rounded_price = models.DecimalField(max_digits=8, decimal_places=2)
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    review_text = models.TextField()
+    review_date = models.DateField()

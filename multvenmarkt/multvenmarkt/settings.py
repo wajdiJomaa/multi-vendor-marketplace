@@ -74,18 +74,20 @@ WSGI_APPLICATION = 'multvenmarkt.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
+
+# To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
+
 DATABASES = {
-    "default": {
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'db',  
-        'USER': 'admin',  
-        'PASSWORD': 'd83epC3B',  
-        'HOST': 'mysql-128948-0.cloudclusters.net',  
-        'PORT': '16606', 
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'neondb',
+    'USER': 'multivendor4',
+    'PASSWORD': '4TeIroBWO2XR',
+    'HOST': 'ep-mute-cloud-574009.eu-central-1.aws.neon.tech',
+    'PORT': '5432',
+  }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
