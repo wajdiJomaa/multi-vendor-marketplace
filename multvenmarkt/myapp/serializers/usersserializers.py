@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
+from ..models import Customer , Vendor
 from rest_framework import serializers
-from .models import *
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,3 +47,26 @@ class CustomerSerializer(serializers.ModelSerializer):
         customer = Customer(phone=phone, address=address, user=user)
         customer.save()
         return customer
+    
+class VendorSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Vendor
+        fields = ['user','description','website', 'phone', 'address','profile_photo']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user_serializer = UserSerializer(data=user_data)
+
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+        description = validated_data.get("description")
+        website = validated_data.get("website")
+        phone = validated_data.get("phone")
+        address = user_data.get("address")
+        profile_photo = validated_data.get("profile_photo")
+
+        vendor = Vendor(description = description , website = website ,  phone=phone, address=address, profile_photo = profile_photo , user=user)
+
+        return vendor

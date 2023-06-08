@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import *
+from .serializers.usersserializers import *
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -20,6 +20,11 @@ class RegisterCustomerView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = CustomerSerializer
+    
+class RegisterVendorView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = VendorSerializer
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
