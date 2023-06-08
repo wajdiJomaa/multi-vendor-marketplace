@@ -35,6 +35,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user_serializer = UserSerializer(data=user_data)
+        user = None
 
         if user_serializer.is_valid():
             user = user_serializer.save()
@@ -43,5 +44,5 @@ class CustomerSerializer(serializers.ModelSerializer):
         address = user_data.get("address")
 
         customer = Customer(phone=phone, address=address, user=user)
-
+        customer.save()
         return customer
