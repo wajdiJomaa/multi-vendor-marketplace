@@ -28,9 +28,11 @@ class Subscription(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     category_image = models.ImageField(upload_to='category_images')
+
 
 class Product(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -43,7 +45,6 @@ class Product(models.Model):
     description = models.TextField()
     image = models.ImageField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
 
 
 class ProductCategory(models.Model):

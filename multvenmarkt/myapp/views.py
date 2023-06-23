@@ -38,7 +38,10 @@ class AddProductView(generics.CreateAPIView):
 #     permission_classes = (AllowAny,)
 #     serializer_class = ProductOptionSerializer
 
-
+class GetCategoryView(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

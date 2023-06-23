@@ -1,12 +1,10 @@
 from rest_framework import serializers
-from ..models import Product, ProductOption, Option
-
+from ..models import Product, ProductOption, Option, Category
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = ['name']
-
 
 class ProductOptionSerializer(serializers.ModelSerializer):
     option = OptionSerializer()
@@ -47,5 +45,10 @@ class AddProductSerializer(serializers.ModelSerializer):
             if product_option_serializer.is_valid():
                 product_option_serializer.save()
 
-        print("hello")
         return product
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields= "__all__"
